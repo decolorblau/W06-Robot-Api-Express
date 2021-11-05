@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node .",
+    "start-dev": "nodemon -q .",
+    "test": "jest --watchAll --collect-coverage"
   },
   "keywords": [],
   "author": "",
