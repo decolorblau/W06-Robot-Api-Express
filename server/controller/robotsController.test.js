@@ -16,7 +16,7 @@ describe("Given a getRobots function", () => {
           features: {
             speed: 8,
             resistance: 10,
-            creation: 2013,
+            yearCreation: "2013-09-28",
           },
         },
         {
@@ -27,12 +27,12 @@ describe("Given a getRobots function", () => {
           features: {
             speed: 7,
             resistance: 6,
-            creation: "2016",
+            yearCreation: "2016-02-01",
           },
         },
       ];
 
-      Robot.find = jest.fn().mockResolvedValue([]);
+      Robot.find = jest.fn().mockResolvedValue(robots);
       const res = {
         json: jest.fn(),
       };
