@@ -10,9 +10,9 @@ const robotSchema = new Schema({
     required: false,
   },
   features: {
-    speed: { type: Number, required: true },
-    resistance: { type: Number, required: true },
-    creation: { type: Date, required: true },
+    speed: { type: Number, required: true, min: 0, max: 10 },
+    resistance: { type: Number, required: true, min: 0, max: 10 },
+    yearCreation: { type: Date, required: true, default: Date.now },
   },
 });
 
