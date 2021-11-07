@@ -7,15 +7,14 @@ const robotSchema = new Schema({
   },
   imageUrl: {
     type: String,
-    required: false,
   },
   features: {
-    speed: { type: Number, required: true, min: 0, max: 10 },
-    resistance: { type: Number, required: true, min: 0, max: 10 },
-    yearCreation: { type: String, required: true },
+    speed: { type: Number, min: 0, max: 10 },
+    resistance: { type: Number, min: 0, max: 10 },
+    yearCreation: { type: String },
   },
 });
 
-const Robot = model("robot", robotSchema);
+const Robot = model("robot", robotSchema, "robots");
 
 module.exports = Robot;
