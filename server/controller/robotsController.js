@@ -22,7 +22,20 @@ const getRobotById = async (req, res, next) => {
   }
 };
 
+const createRobot = async (req, res, next) => {
+  try {
+    const robot = req.body;
+    const newRobot = await Robot.create(robot);
+    res.json(newRobot);
+  } catch (error) {
+    error.code = 400;
+    error.message = "Ouch! This is not a robot!";
+    next(error);
+  }
+};
+
 module.exports = {
   getRobots,
   getRobotById,
+  createRobot,
 };
