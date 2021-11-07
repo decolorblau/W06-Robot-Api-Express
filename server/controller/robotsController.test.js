@@ -1,5 +1,5 @@
 const Robot = require("../../database/models/robot");
-const { getRobots, getRobotById } = require("./robotsController");
+const { getRobots, getRobotById, createRobot } = require("./robotsController");
 
 jest.mock("../../database/models/robot");
 
@@ -134,6 +134,61 @@ describe("Given a getRobotById function", () => {
 
         expect(error.code).toBe(404);
         expect(next).toHaveBeenCalledWith(error);
+      });
+    });
+  });
+});
+
+describe("Given a createRobot function", () => {
+  describe("When it receives a request with a new robot, a res object and a next function", () => {
+    test("Then it should invoke Robot.create with a new robot", async () => {
+      const pepper = {
+        idRobot: 4,
+        name: "Pepper",
+        features: {
+          speed: 8,
+          resistance: 5,
+          yearCreation: 2016,
+        },
+      };
+      const req = {
+        body: pepper,
+      };
+      const robot = req.body;
+      Robot.create = jest.fn().mockResolvedValue(robot);
+      const res = {
+        json: jest.fn(),
+      };
+
+      await createRobot(req, res);
+
+      expect(res.json).toHaveBeenCalledWith(robot);
+    });
+    describe("And Robot.create rejects", () => {
+      test("Then it should invoke invoke next function with the error rejected", async () => {
+        const error = {};
+        Robot.create = jest.fn().mockRejectedValue(error);
+
+        const req = {
+          body: {
+            idRobot: 0,
+            name: "",
+            features: {
+              speed: 0,
+              resistance: 0,
+              yearCreation: 0,
+            },
+          },
+        };
+        const res = {
+          json: jest.fn(),
+        };
+        const next = jest.fn();
+
+        await createRobot(req, res, next);
+
+        expect(next).toHaveBeenCalledWith(error);
+        expect(error.code).toBe(400);
       });
     });
   });
