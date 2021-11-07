@@ -16,7 +16,7 @@ describe("Given a getRobots function", () => {
           features: {
             speed: 8,
             resistance: 10,
-            yearCreation: "2013-09-28",
+            yearCreation: 2013,
           },
         },
         {
@@ -27,7 +27,7 @@ describe("Given a getRobots function", () => {
           features: {
             speed: 7,
             resistance: 6,
-            yearCreation: "2016-02-01",
+            yearCreation: 2016,
           },
         },
       ];
