@@ -1,11 +1,15 @@
-const chalk = require("chalk");
-const debug = require("debug")("robots:server");
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
+const chalk = require("chalk");
+const debug = require("debug")("robots:server");
 const { notFoundErrorHandler, generalErrorHandler } = require("./error");
 const robotsRoutes = require("./routes/robotsRoutes");
 
 const app = express();
+
+app.use(cors());
+app.use(express.json());
 
 const initializeServer = (port) => {
   const server = app.listen(port, () => {
