@@ -16,4 +16,22 @@ describe("Given a newToken function", () => {
       expect(next).toHaveBeenCalled();
     });
   });
+  describe("When it receives an object with an incorrect token", () => {
+    test("Then it should respond with an error", async () => {
+      const req = {
+        query: {
+          token: "incorrect token",
+        },
+      };
+      const error = new Error(
+        "You are not a VIP person. This token is incorrect."
+      );
+      const res = {};
+      const next = jest.fn();
+
+      await newToken(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
 });
