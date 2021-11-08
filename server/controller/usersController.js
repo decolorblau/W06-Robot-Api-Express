@@ -5,17 +5,17 @@ const User = require("../../database/models/user");
 const getUser = async (req, res, next) => {
   try {
     const { userName, password } = req.body;
-    const user = await User.findOnly({ userName });
+    const user = await User.findOne({ userName });
     if (!user) {
-      const error = new Error("Robot not found");
-      error.code = 404;
+      const error = new Error("User not found");
+      error.code = 401;
       next(error);
     } else {
       const rightPassword = await bcrypt.compare(password, user.password);
 
       if (!rightPassword) {
-        const error = new Error("user not found");
-        error.code = 404;
+        const error = new Error("user not p found");
+        error.code = 401;
         next(error);
       } else {
         const token = jwt.sign(

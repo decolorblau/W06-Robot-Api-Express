@@ -5,11 +5,12 @@ const {
   createRobot,
 } = require("../controller/robotsController");
 const newToken = require("../middleware/newToken");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", getRobots);
-router.get("/:idRobots", getRobotById);
+router.get("/", auth, getRobots);
+router.get("/:idRobots", auth, getRobotById);
 router.post("/create", newToken, createRobot);
 
 module.exports = router;
