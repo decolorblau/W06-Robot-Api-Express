@@ -9,9 +9,6 @@ const usersRoutes = require("./routes/usersRoutes");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-
 const initializeServer = (port) => {
   const server = app.listen(port, () => {
     debug(chalk.green(`listening ${port} port`));
@@ -25,10 +22,11 @@ const initializeServer = (port) => {
   });
 };
 
-app.use(morgan("dev"));
+app.use(cors());
 app.use(express.json());
-app.use("/robots", robotsRoutes);
-app.use("/users", usersRoutes);
+app.use(morgan("dev"));
+app.use("/robots", cors(), robotsRoutes);
+app.use("/users", cors(), usersRoutes);
 app.use(notFoundErrorHandler);
 app.use(generalErrorHandler);
 

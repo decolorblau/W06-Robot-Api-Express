@@ -1,11 +1,9 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
-const User = require("../../database/models/user");
-const { getUsers } = require("../controller/usersController");
+const { getUser } = require("../controller/usersController");
 
 const router = express.Router();
 
-router.get("/", getUsers);
+router.post("/login", getUser);
 
 /* router.get("/", async () => {
   User.create({
