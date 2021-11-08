@@ -5,6 +5,7 @@ const chalk = require("chalk");
 const debug = require("debug")("robots:server");
 const { notFoundErrorHandler, generalErrorHandler } = require("./error");
 const robotsRoutes = require("./routes/robotsRoutes");
+const usersRoutes = require("./routes/usersRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ const initializeServer = (port) => {
 app.use(morgan("dev"));
 app.use(express.json());
 app.use("/robots", robotsRoutes);
+app.use("/users", usersRoutes);
 app.use(notFoundErrorHandler);
 app.use(generalErrorHandler);
 
