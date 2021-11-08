@@ -11,7 +11,7 @@ const auth = (req, res, next) => {
   } else {
     const token = authHeader.split(" ")[1];
     if (!token) {
-      const error = new Error("Alguna celda es incorrecta");
+      const error = new Error("No esta autorizado");
       error.code = 401;
       next(error);
     } else {
