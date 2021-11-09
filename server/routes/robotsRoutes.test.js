@@ -9,11 +9,13 @@ const Robot = require("../../database/models/robot");
 
 let server;
 let token;
+beforeAll(async () => {
+  await connectDB(process.env.MONGODB_ROBOTS_TEST);
+  server = await initializeServer(process.env.SERVER_PORT_TEST);
+  debug(chalk.greenBright("Abriendo servidor port"));
+});
 
 beforeEach(async () => {
-  await connectDB(process.env.MONGODB_ROBOTS_TEST);
-  server = await initializeServer(3001);
-
   const { body } = await request(app)
     .post("/users/login")
     .send({
@@ -39,9 +41,10 @@ beforeEach(async () => {
   });
 });
 
-afterEach(async () => {
+afterAll(async () => {
   await mongoose.connection.close();
-  await server.close();
+  await server.close(process.env.SERVER_PORT_TEST);
+  debug(chalk.redBright("Cerrando servidor port"));
 });
 
 describe("Given a /robots router", () => {
@@ -71,6 +74,38 @@ describe("Given a /robots router", () => {
       expect(body).toHaveLength(2);
       expect(body).toContainEqual(robot1);
       expect(body).toContainEqual(robot2);
+    });
+  });
+  describe("When a GET request to /robots/:idRobots with a wrong id", () => {
+    test("Then it should respond with a 404 error", async () => {
+      const { body } = await request(app)
+        .get("/robots/2")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(404);
+
+      const expectedError = {
+        error: "Robot not found",
+      };
+
+      expect(body).toEqual(expectedError);
+    });
+  });
+  describe("When a GET request to /robots/:idRobots with a existing id", () => {
+    test("Then it should respond with a robot and 200 status", async () => {
+      const { body } = await request(app)
+        .get("/robots/61892170a699cfe754044eec")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(200);
+
+      const robot1 = {
+        _id: "61892170a699cfe754044eec",
+        __v: 0,
+        name: "R2-D2",
+        imageUrl: "fondo-r2d2.jpg",
+        features: { speed: 6, resistance: 8, yearCreation: "1968" },
+      };
+
+      expect(body).toEqual(robot1);
     });
   });
 });

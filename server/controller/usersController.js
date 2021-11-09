@@ -7,7 +7,7 @@ const getUser = async (req, res, next) => {
   try {
     const { userName, password } = req.body;
     const user = await User.findOne({ userName });
-    console.log(user);
+
     if (!user) {
       const error = new Error("Wrong credentials");
       error.code = 401;
