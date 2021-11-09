@@ -1,9 +1,13 @@
 const express = require("express");
+const { validate } = require("express-validation");
 const { getUser } = require("../controller/usersController");
+const {
+  loginRequestSchema,
+} = require("../schemas/loginRequestSchema/loginRequestSchema");
 
 const router = express.Router();
 
-router.post("/login", getUser);
+router.post("/login", validate(loginRequestSchema), getUser);
 
 /* router.get("/", async () => {
   User.create({
