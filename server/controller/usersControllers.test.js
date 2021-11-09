@@ -1,15 +1,16 @@
+require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const { getUser } = require("./usersController");
-const User = require("../../database/models/robot");
+const User = require("../../database/models/user");
 
 jest.mock("../../database/models/user");
 jest.mock("bcrypt");
 jest.mock("jsonwebtoken");
 
 describe("Given a getUser function", () => {
-  /*   describe("When it receives wrong userName", () => {
+  describe("When it receives wrong userName", () => {
     test("Then it should invoke the next function with an error", async () => {
       User.findOne = jest.fn().mockResolvedValue(null); // A qui li diem quin valor volem que retorni
       const req = {
@@ -31,7 +32,7 @@ describe("Given a getUser function", () => {
       );
       expect(next.mock.calls[0][0]).toHaveProperty("code", expectedError.code);
     });
-  }); */
+  });
   describe("When it receives right userName and wrong password", () => {
     test("Then it should invoke the next function with a 401 error", async () => {
       User.findOne = jest.fn().mockResolvedValue({
@@ -67,10 +68,11 @@ describe("Given a getUser function", () => {
         password: "hola", // com que testesjem el bcrypt. compare necessita una password encriptada
       });
       const expectedToken = "papaya";
-      bcrypt.compare = jest.fn().mockResolvedValue(false);
+      bcrypt.compare = jest.fn().mockResolvedValue(true);
       jwt.sign = jest.fn().mockReturnValue(expectedToken);
       const req = {
         body: {
+          id: "2",
           userName: "hola",
           password: "hola",
         },
@@ -78,6 +80,7 @@ describe("Given a getUser function", () => {
       const res = {
         json: jest.fn(),
       };
+
       const expectedResponse = {
         token: expectedToken,
       };

@@ -10,18 +10,23 @@ const auth = require("./middleware/auth");
 
 const app = express();
 
-const initializeServer = (port) => {
-  const server = app.listen(port, () => {
-    debug(chalk.green(`listening ${port} port`));
+const initializeServer = (port) =>
+  new Promise((resolve, reject) => {
+    const server = app.listen(port, () => {
+      debug(chalk.green(`listening ${port} port`));
+      resolve(server);
+    });
+    server.on("error", (error) => {
+      debug(chalk.redBright("There was an error starting the server."));
+      if (error.code === "EADDRINUSE") {
+        debug(chalk.red(`The port ${port} is in use.`));
+      }
+      reject();
+    });
+    server.on("close", () => {
+      debug(chalk.yellow("server express disconnected"));
+    });
   });
-
-  server.on("error", (error) => {
-    debug(chalk.redBright("There was an error starting the server."));
-    if (error.code === "EADDRINUSE") {
-      debug(chalk.red(`The port ${port} is in use.`));
-    }
-  });
-};
 
 app.use(cors());
 app.use(express.json());
@@ -31,4 +36,4 @@ app.use("/robots", auth, robotsRoutes);
 app.use(notFoundErrorHandler);
 app.use(generalErrorHandler);
 
-module.exports = initializeServer;
+module.exports = { initializeServer, app };
