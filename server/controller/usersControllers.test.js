@@ -43,7 +43,7 @@ describe("Given a getUser function", () => {
       const req = {
         body: {
           userName: "hola",
-          password: "hola",
+          password: "patata",
         },
       };
       const next = jest.fn();

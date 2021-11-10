@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const connectDB = (connectionDB) =>
   new Promise((resolve, reject) => {
-    mongoose.set("debug", true);
+    mongoose.set("debug", false); // consolea base de datos cuando esta en true.
 
     mongoose.connect(connectionDB, (error) => {
       if (error) {

@@ -4,12 +4,11 @@ const {
   getRobotById,
   createRobot,
 } = require("../controller/robotsController");
-const newToken = require("../middleware/newToken");
 
 const router = express.Router();
 
 router.get("/", getRobots);
-router.get("/:idRobots", getRobotById);
-router.post("/create", newToken, createRobot);
+router.get("/:idRobot", getRobotById);
+router.post("/create", createRobot);
 
 module.exports = router;
