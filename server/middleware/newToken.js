@@ -3,6 +3,7 @@ require("dotenv").config();
 const token = process.env.ROBOT_TOKEN;
 
 const newToken = (req, res, next) => {
+  console.log("He arribat fins aqui");
   if (token === req.query.token) {
     next();
   } else {

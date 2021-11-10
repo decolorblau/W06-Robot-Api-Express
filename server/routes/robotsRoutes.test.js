@@ -2,10 +2,12 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const debug = require("debug");
 const chalk = require("chalk");
-const request = require("supertest");
+const supertest = require("supertest");
 const { app, initializeServer } = require("../index");
 const connectDB = require("../../database/index");
 const Robot = require("../../database/models/robot");
+
+const request = supertest(app);
 
 let server;
 let token;
@@ -16,7 +18,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  const { body } = await request(app)
+  const { body } = await request
     .post("/users/login")
     .send({
       userName: "Test",
@@ -25,8 +27,8 @@ beforeEach(async () => {
     .expect(200);
   debug(chalk.blue("Abemus token!", body.token));
   token = body.token;
-
   await Robot.deleteMany({});
+
   await Robot.create({
     _id: "61892170a699cfe754044eec",
     name: "R2-D2",
@@ -41,17 +43,23 @@ beforeEach(async () => {
   });
 });
 
-afterAll(async () => {
-  await mongoose.connection.close();
-  await server.close(process.env.SERVER_PORT_TEST);
-  debug(chalk.redBright("Cerrando servidor port"));
+/* afterEach(async () => {
+  await Robot.deleteMany({});
+}); */
+
+afterAll((done) => {
+  // done es una funcion de jest que es para decir que ya esta todo hecho
+  server.close(async () => {
+    await mongoose.connection.close();
+    done();
+  });
 });
 
 describe("Given a /robots router", () => {
   describe("When a Get request to /robots/ arrives", () => {
     test("Then it should respond with an array of pets and a 200 status", async () => {
       debug("inside inside test");
-      const { body } = await request(app)
+      const { body } = await request
         .get("/robots/")
         .set("Authorization", `Bearer ${token}`)
         .expect(200);
@@ -78,8 +86,8 @@ describe("Given a /robots router", () => {
   });
   describe("When a GET request to /robots/:idRobots with a wrong id", () => {
     test("Then it should respond with a 404 error", async () => {
-      const { body } = await request(app)
-        .get("/robots/2")
+      const { body } = await request
+        .get("/robots/61892170a699cfe754044fec")
         .set("Authorization", `Bearer ${token}`)
         .expect(404);
 
@@ -92,12 +100,12 @@ describe("Given a /robots router", () => {
   });
   describe("When a GET request to /robots/:idRobots with a existing id", () => {
     test("Then it should respond with a robot and 200 status", async () => {
-      const { body } = await request(app)
+      const { body } = await request
         .get("/robots/61892170a699cfe754044eec")
         .set("Authorization", `Bearer ${token}`)
         .expect(200);
 
-      const robot1 = {
+      const expectedRobot = {
         _id: "61892170a699cfe754044eec",
         __v: 0,
         name: "R2-D2",
@@ -105,7 +113,38 @@ describe("Given a /robots router", () => {
         features: { speed: 6, resistance: 8, yearCreation: "1968" },
       };
 
-      expect(body).toEqual(robot1);
+      expect(body).toEqual(expectedRobot);
+    });
+  });
+  describe("When a POST request to /robots/create with a robot", () => {
+    test("Then it should respond with the new robot and a status 201", async () => {
+      const { body } = await request
+        .post("/robots/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          name: "test-robot",
+          imageUrl: "fondo-robot.jpg",
+          features: { speed: 7, resistance: 9, yearCreation: "2021" },
+        })
+        .expect(201);
+
+      expect(body).toHaveProperty("name", "test-robot");
+      expect(body).toHaveProperty("imageUrl", "fondo-robot.jpg");
+    });
+  });
+  describe("When a POST request to /robots/create with a empty object", () => {
+    test("Then it should respond with with a 404 error", async () => {
+      const { body } = await request
+        .post("/robots/create")
+        .set("Authorization", `Bearer ${token}`)
+        .send({})
+        .expect(400);
+
+      const expectedError = {
+        error: "Ouch! This is not a robot!",
+      };
+
+      expect(body).toEqual(expectedError);
     });
   });
 });

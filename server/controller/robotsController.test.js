@@ -141,24 +141,34 @@ describe("Given a getRobotById function", () => {
 
 describe("Given a createRobot function", () => {
   describe("When it receives a request with a new robot, a res object and a next function", () => {
-    test("Then it should invoke Robot.create with a new robot", async () => {
+    test.only("Then it should invoke Robot.create with a new robot", async () => {
       const pepper = {
-        idRobot: 4,
+        _id: "61892170a699cfe754044ddc",
         name: "Pepper",
+        imageUrl: "foto-pepper.jpg",
         features: {
           speed: 8,
           resistance: 5,
           yearCreation: 2016,
         },
       };
+      console.log(pepper);
       const req = {
         body: pepper,
       };
+
       const robot = req.body;
-      Robot.create = jest.fn().mockResolvedValue(robot);
-      const res = {
-        json: jest.fn(),
+      console.log(robot);
+
+      const mockResponse = () => {
+        const res = {};
+        res.status = jest.fn().mockReturnValue(res);
+        res.json = jest.fn().mockReturnValue(res);
+        return res;
       };
+
+      Robot.create = jest.fn().mockResolvedValue(robot);
+      const res = mockResponse();
 
       await createRobot(req, res);
 
