@@ -1,6 +1,6 @@
 const express = require("express");
 const { validate } = require("express-validation");
-const { getUser } = require("../controller/usersController");
+const { getUser, createUser } = require("../controller/usersController");
 const {
   loginRequestSchema,
 } = require("../schemas/loginRequestSchema/loginRequestSchema");
@@ -8,6 +8,7 @@ const {
 const router = express.Router();
 
 router.post("/login", validate(loginRequestSchema), getUser);
+router.post("/signin", validate(loginRequestSchema), createUser);
 
 /* router.get("/", async () => {
   User.create({
