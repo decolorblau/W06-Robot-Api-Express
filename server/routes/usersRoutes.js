@@ -4,18 +4,13 @@ const { getUser, createUser } = require("../controller/usersController");
 const {
   loginRequestSchema,
 } = require("../schemas/loginRequestSchema/loginRequestSchema");
+const {
+  signinRequestSchema,
+} = require("../schemas/signinRequestSchema/signinRequestSchema");
 
 const router = express.Router();
 
 router.post("/login", validate(loginRequestSchema), getUser);
-router.post("/signin", validate(loginRequestSchema), createUser);
-
-/* router.get("/", async () => {
-  User.create({
-    name: "primer usuari",
-    userName: "The First",
-    password: await bcrypt.hash("primeraPatata", 10),
-  });
-}); */
+router.post("/signin", validate(signinRequestSchema), createUser);
 
 module.exports = router;
