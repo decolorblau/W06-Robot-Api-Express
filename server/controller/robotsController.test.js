@@ -141,7 +141,7 @@ describe("Given a getRobotById function", () => {
 
 describe("Given a createRobot function", () => {
   describe("When it receives a request with a new robot, a res object and a next function", () => {
-    test.only("Then it should invoke Robot.create with a new robot", async () => {
+    test("Then it should invoke Robot.create with a new robot", async () => {
       const pepper = {
         _id: "61892170a699cfe754044ddc",
         name: "Pepper",
