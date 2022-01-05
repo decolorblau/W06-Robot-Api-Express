@@ -42,14 +42,11 @@ const getUser = async (req, res, next) => {
 };
 
 const createUser = async (req, res, next) => {
+  const { name, userName, password } = req.body;
   try {
-    const { name, userName, password } = req.body;
     const user = await User.findOne({ userName });
-    if (user) {
-      const error = new Error("This email is already registered");
-      error.code = 401;
-      next(error);
-    } else {
+
+    if (!user) {
       const newUser = await User.create({
         name,
         userName,
@@ -57,6 +54,10 @@ const createUser = async (req, res, next) => {
       });
       res.status(201).json(newUser);
       debug(chalk.green("User registered correctly"));
+    } else {
+      const error = new Error("This email is already registered");
+      error.code = 401;
+      next(error);
     }
   } catch {
     const error = new Error("Error creating the user");
