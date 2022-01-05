@@ -5,13 +5,13 @@ const auth = (req, res, next) => {
   const authHeader = req.header("Authorization");
 
   if (!authHeader) {
-    const error = new Error("no estas autorizado");
+    const error = new Error("Unauthorized");
     error.code = 401;
     next(error);
   } else {
     const token = authHeader.split(" ")[1];
     if (!token) {
-      const error = new Error("No esta autorizado");
+      const error = new Error("Unauthorized");
       error.code = 401;
       next(error);
     } else {
@@ -20,7 +20,7 @@ const auth = (req, res, next) => {
         res.userId = user.id;
         next();
       } catch {
-        const error = new Error("Token incorrecto");
+        const error = new Error("Unauthorized");
         error.code = 401;
         next(error);
       }
