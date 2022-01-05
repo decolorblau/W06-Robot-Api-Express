@@ -57,7 +57,7 @@ afterAll((done) => {
 
 describe("Given a /robots router", () => {
   describe("When a Get request to /robots/ arrives", () => {
-    test("Then it should respond with an array of pets and a 200 status", async () => {
+    test.only("Then it should respond with an array of pets and a 200 status", async () => {
       debug("inside inside test");
       const { body } = await request
         .get("/robots/")

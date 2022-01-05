@@ -3,7 +3,10 @@ const morgan = require("morgan");
 const cors = require("cors");
 const chalk = require("chalk");
 const debug = require("debug")("robots:server");
-const { notFoundErrorHandler, generalErrorHandler } = require("./error");
+const {
+  notFoundErrorHandler,
+  generalErrorHandler,
+} = require("./middleware/error");
 const robotsRoutes = require("./routes/robotsRoutes");
 const usersRoutes = require("./routes/usersRoutes");
 const auth = require("./middleware/auth");
