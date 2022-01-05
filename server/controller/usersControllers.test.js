@@ -65,7 +65,7 @@ describe("Given a getUser function", () => {
       User.findOne = jest.fn().mockResolvedValue({
         id: "2",
         userName: "hola",
-        password: "hola", // com que testesjem el bcrypt. compare necessita una password encriptada
+        password: "hola",
       });
       const expectedToken = "papaya";
       bcrypt.compare = jest.fn().mockResolvedValue(true);
@@ -88,6 +88,24 @@ describe("Given a getUser function", () => {
       await getUser(req, res);
 
       expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+  describe("When it receives the req object and the promise rejects", () => {
+    test("Then it should invoke the next function with a error", async () => {
+      const req = {
+        body: {
+          id: "2",
+          userName: "hola",
+          password: "hola",
+        },
+      };
+      const next = jest.fn();
+      const error = new Error("Error logging in the user");
+      error.code = 401;
+      User.findOne = jest.fn().mockRejectedValue(error);
+
+      await getUser(req, null, next);
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
