@@ -10,7 +10,7 @@ const generalErrorHandler = (error, req, res, next) => {
   debug("Something its wrong: ", error.message);
   if (error instanceof ValidationError) {
     error.code = 400;
-    error.message = "Evil request";
+    error.message = "Bad request";
   }
   const message = error.code ? error.message : "The world is coming to end";
   res.status(error.code || 500).json({ error: message });
